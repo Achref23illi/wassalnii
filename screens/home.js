@@ -122,6 +122,9 @@ const HomePage = ({ navigation }) => {
             <Text style={styles.locationText}>Location</Text>
             <Text style={styles.locationValue}>{text}</Text>
           </View>
+          <TouchableOpacity style={[styles.searchButton]}>
+            <Text style={styles.searchButtonText}>Search</Text>
+          </TouchableOpacity>
         </Animated.View>
       </View>
     </SafeAreaView>
@@ -216,6 +219,22 @@ const styles = StyleSheet.create({
     top: 25, // Adjust if needed to center vertically on different devices
     alignSelf: "center",
     zIndex: 10,
+  },
+  searchButton: {
+    width: 100, // adjust this value as needed
+    height: 50, // adjust this value as needed
+    borderRadius: 20,
+    backgroundColor: "#000",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#fff",
+  },
+  searchButtonText: {
+    color: "#fff", // adjust this value as needed
+    fontSize: 16, // adjust this value as needed
   },
 });
 
