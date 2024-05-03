@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import splash from "./screens/splash";
+import phone from "./screens/phone";
+import otp from "./screens/otp";
+import Welcome from "./screens/welcome";
+import BottomTabNavigator from "./BottomTabNavigator";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="splash">
+        <Stack.Screen
+          name="splash"
+          component={splash}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="welcome"
+          component={Welcome}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="phone"
+          component={phone}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Otp"
+          component={otp}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
