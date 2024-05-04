@@ -1,181 +1,175 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  View,
-  Text,
   StyleSheet,
-  Image,
+  View,
+  TextInput,
   TouchableOpacity,
-  Animated,
-  SafeAreaView,
+  Text,
+  Button,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import DropDownPicker from "react-native-dropdown-picker";
 
-const HomePage = ({ navigation }) => {
-  const [welcomeUser, setWelcomeUser] = useState("Welcome User");
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+const HomePage = () => {
+  const navigation = useNavigation();
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [locationName, setLocationName] = useState("Fetching location...");
+  const [personCount, setPersonCount] = useState(1);
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        console.log("Permission to access location was denied");
         return;
       }
 
-      let locationResult = await Location.getCurrentPositionAsync({});
-      setLocation(locationResult);
-      try {
-        const reverseGeocode = await Location.reverseGeocodeAsync({
-          latitude: locationResult.coords.latitude,
-          longitude: locationResult.coords.longitude,
-        });
-        if (reverseGeocode.length > 0) {
-          setLocationName(
-            `${reverseGeocode[0].district}, ${reverseGeocode[0].region}, ${reverseGeocode[0].country}`
-          );
-        }
-      } catch (error) {
-        setErrorMsg("Failed to fetch location");
-      }
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
     })();
-  }, [fadeAnim]);
+  }, []);
 
-  const handleProfileClick = () => {
-    navigation.navigate("ProfileScreen");
+  const handleInputFromPress = () => {
+    navigation.navigate("from");
   };
 
-  const handleGetRide = () => {
-    navigation.navigate("GetRideScreen");
+  const handleInputToPress = () => {
+    navigation.navigate("to");
   };
 
-  const handlePostTrip = () => {
-    navigation.navigate("PostTripScreen");
+  const handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(false);
+    setDate(currentDate);
   };
 
-  let text = errorMsg ? errorMsg : locationName;
+  const getDateString = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return "Tomorrow";
+    } else {
+      return date.toLocaleDateString();
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.fullPage}>
-        <Animated.Image
-          source={require("../assets/WASWHITE.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <Animated.View
-          style={[
-            styles.contentArea,
-            {
-              transform: [
-                {
-                  translateY: fadeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [600, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <View style={styles.header}>
-            <Text style={styles.welcomeText}>{welcomeUser}</Text>
-            <TouchableOpacity onPress={handleProfileClick}>
-              <Ionicons name="person-circle-outline" size={32} color="#000" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.optionsContainer}>
-            <TouchableOpacity style={styles.optionCard} onPress={handleGetRide}>
-              <View style={styles.optionContent}>
-                <Image
-                  source={require("../assets/images/get_ride.png")}
-                  style={styles.optionImage}
-                />
-                <Text style={styles.optionText}>Get a Ride</Text>
-                <Ionicons name="chevron-forward" size={24} color="#000" />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.optionCard}
-              onPress={handlePostTrip}
-            >
-              <View style={styles.optionContent}>
-                <Image
-                  source={require("../assets/images/post_trip.png")}
-                  style={styles.optionImage}
-                />
-                <Text style={styles.optionText}>Post a Trip</Text>
-                <Ionicons name="chevron-forward" size={24} color="#000" />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.locationContainer}>
-            <Text style={styles.locationText}>Location</Text>
-            <Text style={styles.locationValue}>{text}</Text>
-          </View>
-          <TouchableOpacity style={[styles.searchButton]}>
-            <Text style={styles.searchButtonText}>Search</Text>
+    <View style={styles.container}>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        region={{
+          latitude: location ? location.coords.latitude : 0,
+          longitude: location ? location.coords.longitude : 0,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        }}
+      >
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+          >
+            <Ionicons name="location-sharp" size={50} color="#2E86AB" />
+          </Marker>
+        )}
+      </MapView>
+      <View style={styles.topContainer}>
+        <View style={styles.inputContainer}>
+          <Ionicons name="disc-sharp" size={20} color="#2E86AB" />
+          <TouchableOpacity onPress={handleInputFromPress} style={{ flex: 1 }}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Pickup Location"
+              editable={false}
+            />
           </TouchableOpacity>
-        </Animated.View>
+        </View>
+        <View style={styles.inputContainer}>
+          <Ionicons name="location" size={24} color="red" />
+          <TouchableOpacity onPress={handleInputToPress} style={{ flex: 1 }}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Drop Location"
+              editable={false}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.datePersonContainer}>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={styles.dateButton}
+          >
+            <Ionicons name="calendar-outline" size={24} color="white" />
+            <Text style={styles.dateText}>{getDateString()}</Text>
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
+          <View style={styles.directionColumn}>
+            <View style={styles.personIcon}>
+              <Ionicons name="person-outline" size={24} color="#2E86AB" />
+            </View>
+            <DropDownPicker
+              open={open}
+              value={personCount}
+              items={[
+                { label: "1", value: 1 },
+                { label: "2", value: 2 },
+                { label: "3", value: 3 },
+                { label: "4", value: 4 },
+                { label: "5", value: 5 },
+                { label: "6", value: 6 },
+              ]}
+              setOpen={setOpen}
+              setValue={setPersonCount}
+              containerStyle={styles.dropdownContainer}
+              style={styles.dropdown}
+            />
+          </View>
+        </View>
+        <Button title="Search" onPress={() => {}} color="#2E86AB" />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
-    backgroundColor: "#000",
   },
-  fullPage: {
+  map: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
   },
-  contentArea: {
-    height: "87%",
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 16,
-    alignItems: "center",
-    justifyContent: "flex-start", // Adjusted to align items at the start of the view
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 10, // Reduced the margin to bring elements closer
-  },
-  welcomeText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  profileButton: {
-    padding: 8,
-  },
-  optionsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginVertical: 10, // Adjusted vertical spacing
-  },
-  optionCard: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 8,
-    width: "48%",
-    alignItems: "center",
+  topContainer: {
+    position: "absolute",
+    bottom: 30,
+    width: "85%",
+    height: 250,
+    zIndex: 1,
+    backgroundColor: "white",
+    alignSelf: "center",
+    borderRadius: 10,
+    padding: 20,
+    justifyContent: "space-around",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -184,57 +178,70 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    borderWidth: 0.4,
   },
-  optionContent: {
+  inputContainer: {
+    flexDirection: "row",
     alignItems: "center",
-  },
-  optionImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 8,
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  locationContainer: {
-    position: "absolute",
-    bottom: 12,
     width: "100%",
-    alignItems: "center",
+    marginBottom: 10,
+    justifyContent: "center",
   },
-  locationText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  locationValue: {
-    fontSize: 14,
-  },
-  logo: {
-    width: 120,
-    height: 80,
-    position: "absolute",
-    top: 25, // Adjust if needed to center vertically on different devices
-    alignSelf: "center",
-    zIndex: 10,
-  },
-  searchButton: {
-    width: 100, // adjust this value as needed
-    height: 50, // adjust this value as needed
-    borderRadius: 20,
-    backgroundColor: "#000",
-    padding: 10,
+  datePersonContainer: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: "#fff",
+    marginBottom: 10,
+    width: "100%",
   },
-  searchButtonText: {
-    color: "#fff", // adjust this value as needed
-    fontSize: 16, // adjust this value as needed
+  directionColumn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginLeft: 15,
+    flex: 1,
+  },
+  personIcon: {
+    marginRight: 10,
+  },
+  input: {
+    borderBottomWidth: 0.2,
+    borderBottomColor: "#ccc",
+    flex: 1,
+  },
+  dateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#2E86AB",
+    padding: 10,
+    borderRadius: 20,
+  },
+  dateText: {
+    color: "white",
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  dropdownContainer: {
+    height: 20,
+    width: 60,
+    marginTop: -20,
+  },
+  dropdown: {
+    backgroundColor: "#fafafa",
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#2E86AB",
+    padding: 10,
+    borderRadius: 20,
+    alignSelf: "flex-start",
+  },
+  buttonText: {
+    color: "white",
+    marginLeft: 10,
   },
 });
 

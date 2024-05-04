@@ -7,6 +7,8 @@ import phone from "./screens/phone";
 import otp from "./screens/otp";
 import Welcome from "./screens/welcome";
 import BottomTabNavigator from "./BottomTabNavigator";
+import From from "./screens/location/from";
+import To from "./screens/location/to";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +39,16 @@ export default function App() {
         <Stack.Screen
           name="Main"
           component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="from"
+          component={From}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="to"
+          component={To}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

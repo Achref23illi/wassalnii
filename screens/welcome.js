@@ -1,121 +1,183 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  Image,
   TouchableOpacity,
-  Linking,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  Image,
   Animated,
 } from "react-native";
+import Swiper from "react-native-swiper";
+import * as Progress from "react-native-progress";
+import { useNavigation } from "@react-navigation/native";
 
-const WelcomePage = ({ navigation }) => {
-  const openLink = () => {
-    Linking.openURL("https://github.com/Achref23illi");
+const WelcomeScreen = () => {
+  const [progress, setProgress] = useState(0);
+  const swiperRef = useRef(null);
+  const navigation = useNavigation();
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+  const scaleAnim = useRef(new Animated.Value(0)).current; // Initial value for scale: 0
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      tension: 20,
+      friction: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim, scaleAnim]);
+
+  const nextPage = () => {
+    swiperRef.current.scrollBy(1);
   };
 
-  const handleContinue = () => {
+  const continueToPhone = () => {
     navigation.navigate("phone");
   };
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, scaleAnim]);
-
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.logoContainer,
-          { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
-        ]}
+    <SafeAreaView style={styles.container}>
+      <Swiper
+        ref={swiperRef}
+        loop={false}
+        onIndexChanged={(index) => setProgress((index + 1) / 3)}
+        activeDotColor="#2E86AB"
       >
-        <Image
-          source={require("../assets/BPerson.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </Animated.View>
-      <Animated.Text style={[styles.headline, { opacity: fadeAnim }]}>
-        Welcome to Wassalni App
-      </Animated.Text>
-      <Animated.Text style={[styles.description, { opacity: fadeAnim }]}>
-        Read our{" "}
-        <Text style={styles.link} onPress={openLink}>
-          Privacy Policy
-        </Text>
-        . {'Tap "Agree & Continue" to accept the '}
-        <Text style={styles.link} onPress={openLink}>
-          Terms of Service
-        </Text>
-        .
-      </Animated.Text>
-      <Animated.View style={{ opacity: fadeAnim }}>
-        <TouchableOpacity style={styles.button} onPress={handleContinue}>
-          <Text style={styles.buttonText}>Agree & Continue</Text>
+        <View style={styles.pageContainer}>
+          <Animated.View
+            style={{ ...styles.circle, transform: [{ scale: scaleAnim }] }}
+          >
+            <Image
+              source={require("../assets/images/page1.png")}
+              style={styles.image}
+            />
+          </Animated.View>
+          <Animated.Text style={{ ...styles.bigText, opacity: fadeAnim }}>
+            Request Ride
+          </Animated.Text>
+          <Animated.Text style={{ ...styles.description, opacity: fadeAnim }}>
+            Request a ride get picked up by a nearby traveller
+          </Animated.Text>
+        </View>
+        <View style={styles.pageContainer}>
+          <Animated.View
+            style={{ ...styles.circle, transform: [{ scale: scaleAnim }] }}
+          >
+            <Image
+              source={require("../assets/images/page2.png")}
+              style={styles.image}
+            />
+          </Animated.View>
+          <Animated.Text style={{ ...styles.bigText, opacity: fadeAnim }}>
+            Confirm Your Driver
+          </Animated.Text>
+          <Animated.Text style={{ ...styles.description, opacity: fadeAnim }}>
+            Huge drivers network helps you find comfortable, safe and cheap ride
+          </Animated.Text>
+        </View>
+        <View style={styles.pageContainer}>
+          <Animated.View
+            style={{ ...styles.circle, transform: [{ scale: scaleAnim }] }}
+          >
+            <Image
+              source={require("../assets/images/page4.png")}
+              style={styles.image}
+            />
+          </Animated.View>
+          <Animated.Text style={{ ...styles.bigText, opacity: fadeAnim }}>
+            Track Your Ride
+          </Animated.Text>
+          <Animated.Text style={{ ...styles.description, opacity: fadeAnim }}>
+            Follow your driver in advance and be able to track your current
+            location in real time on the map
+          </Animated.Text>
+        </View>
+      </Swiper>
+      <Progress.Bar
+        progress={progress}
+        width={150}
+        color={"#2E86AB"}
+        unfilledColor={"#ddd"}
+        borderRadius={10}
+        borderWidth={0}
+        style={styles.progressBar}
+      />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={progress === 1 ? continueToPhone : nextPage}
+        >
+          <Text style={styles.buttonText}>
+            {progress === 1 ? "Continue" : "Next"}
+          </Text>
         </TouchableOpacity>
-      </Animated.View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
   },
-  logoContainer: {
-    marginBottom: 30,
+  pageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  logo: {
-    width: 150,
-    height: 150,
+  progressBar: {
+    marginBottom: 20,
   },
-  headline: {
+  buttonContainer: {
+    width: Dimensions.get("window").width * 0.8,
+    borderRadius: 15,
+    overflow: "hidden",
+    marginBottom: 25,
+  },
+  button: {
+    backgroundColor: "#2E86AB",
+    padding: 10,
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+  },
+  circle: {
+    backgroundColor: "#2E86AB",
+    width: 250,
+    height: 250,
+    borderRadius: 360,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  image: {
+    width: 190,
+    height: 190,
+  },
+  bigText: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign: "center",
   },
   description: {
-    fontSize: 14,
+    fontSize: 16,
+    color: "#666",
     textAlign: "center",
-    marginBottom: 80,
-    color: "#000000",
-  },
-  link: {
-    color: "#32746D",
-  },
-  button: {
-    width: "100%",
-    alignItems: "center",
-    backgroundColor: "#000000",
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#fff",
-    paddingHorizontal: 60,
-    fontWeight: "bold",
+    width: "80%",
   },
 });
 
-export default WelcomePage;
+export default WelcomeScreen;
