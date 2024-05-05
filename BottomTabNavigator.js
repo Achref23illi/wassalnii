@@ -3,6 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomePage from "./screens/home";
 import InboxPage from "./screens/InboxPage";
+import Publish from "./screens/Publish";
+import { HeaderTitle } from "@react-navigation/elements";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,18 +17,23 @@ export default function BottomTabNavigator() {
           let iconName;
 
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
+            iconName = focused ? "search" : "search-outline";
+          } else if (route.name === "Publish") {
+            iconName = focused ? "add-circle" : "add-circle-outline";
           } else if (route.name === "Inbox") {
-            iconName = focused ? "mail" : "mail-outline";
+            iconName = focused
+              ? "chatbubble-ellipses"
+              : "chatbubble-ellipses-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#32746d",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#2E86AB",
+        tabBarInactiveTintColor: "#000",
       })}
     >
       <Tab.Screen name="Home" component={HomePage} />
+      <Tab.Screen name="Publish" component={Publish} />
       <Tab.Screen name="Inbox" component={InboxPage} />
     </Tab.Navigator>
   );

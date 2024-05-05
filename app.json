@@ -3,6 +3,9 @@
     "name": "Wassalni",
     "slug": "Wassalni",
     "version": "1.0.0",
+    "extra": {
+      "googlePlacesApiKey": "@GOOGLE_PLACES_API_KEY"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

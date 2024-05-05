@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   Text,
   Button,
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import DropDownPicker from "react-native-dropdown-picker";
 
 const HomePage = () => {
   const navigation = useNavigation();
@@ -20,7 +20,7 @@ const HomePage = () => {
   const [personCount, setPersonCount] = useState(1);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -61,6 +61,11 @@ const HomePage = () => {
     } else {
       return date.toLocaleDateString();
     }
+  };
+
+  const handlePersonCountChange = (value) => {
+    setPersonCount(value);
+    setModalVisible(false);
   };
 
   return (
@@ -125,25 +130,35 @@ const HomePage = () => {
             />
           )}
           <View style={styles.directionColumn}>
-            <View style={styles.personIcon}>
-              <Ionicons name="person-outline" size={24} color="#2E86AB" />
-            </View>
-            <DropDownPicker
-              open={open}
-              value={personCount}
-              items={[
-                { label: "1", value: 1 },
-                { label: "2", value: 2 },
-                { label: "3", value: 3 },
-                { label: "4", value: 4 },
-                { label: "5", value: 5 },
-                { label: "6", value: 6 },
-              ]}
-              setOpen={setOpen}
-              setValue={setPersonCount}
-              containerStyle={styles.dropdownContainer}
-              style={styles.dropdown}
-            />
+            <TouchableOpacity
+              style={styles.personIcon}
+              onPress={() => setModalVisible(true)}
+            >
+              <Ionicons name="person-outline" size={24} color="#fff" />
+              <Text style={{ color: "white" }}>{personCount}</Text>
+            </TouchableOpacity>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  {[1, 2, 3, 4, 5, 6].map((value) => (
+                    <TouchableOpacity
+                      key={value}
+                      style={styles.modalText}
+                      onPress={() => handlePersonCountChange(value)}
+                    >
+                      <Text style={styles.modalText}>{value}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </Modal>
           </View>
         </View>
         <Button title="Search" onPress={() => {}} color="#2E86AB" />
@@ -203,6 +218,13 @@ const styles = StyleSheet.create({
   },
   personIcon: {
     marginRight: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#2E86AB", // change this to your preferred color
+    borderRadius: 15, // change this to your preferred border radius
+    padding: 8,
+    paddingHorizontal: 15,
   },
   input: {
     borderBottomWidth: 0.2,
@@ -222,26 +244,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 10,
   },
-  dropdownContainer: {
-    height: 20,
-    width: 60,
-    marginTop: -20,
-  },
-  dropdown: {
-    backgroundColor: "#fafafa",
-  },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
+  centeredView: {
+    flex: 1,
     justifyContent: "center",
-    backgroundColor: "#2E86AB",
-    padding: 10,
-    borderRadius: 20,
-    alignSelf: "flex-start",
+    alignItems: "center",
+    marginTop: 22,
   },
-  buttonText: {
-    color: "white",
-    marginLeft: 10,
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 
