@@ -36,11 +36,11 @@ const HomePage = () => {
   }, []);
 
   const handleInputFromPress = () => {
-    navigation.navigate("from");
+    navigation.navigate("pickUp");
   };
 
   const handleInputToPress = () => {
-    navigation.navigate("to");
+    navigation.navigate("drop");
   };
 
   const handleDateChange = (event, selectedDate) => {

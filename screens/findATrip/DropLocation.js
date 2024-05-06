@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const To = () => {
+const DropLocation = () => {
   return (
     <View>
-      <Text>To</Text>
+      <Text>DropLocation</Text>
     </View>
   );
 };
 
-export default To;
+export default DropLocation;

@@ -7,16 +7,15 @@ import phone from "./screens/phone";
 import otp from "./screens/otp";
 import Welcome from "./screens/welcome";
 import BottomTabNavigator from "./BottomTabNavigator";
-import From from "./screens/location/from";
-import To from "./screens/location/to";
 import Distination from "./screens/publish/distination";
 import SeatSelection from "./screens/publish/SeatSelection";
-import { Calendar } from "react-native-calendars";
 import DateSelection from "./screens/publish/DateSelection";
 import PickUp from "./screens/publish/PickUp";
 import Return from "./screens/publish/Return";
 import ReturnDate from "./screens/publish/ReturnDate";
 import Price from "./screens/publish/Price";
+import PickUpLocation from "./screens/findATrip/PickUpLocation";
+import DropLocation from "./screens/findATrip/DropLocation";
 
 const Stack = createStackNavigator();
 
@@ -47,16 +46,6 @@ export default function App() {
         <Stack.Screen
           name="Main"
           component={BottomTabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="from"
-          component={From}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="to"
-          component={To}
           options={{ headerShown: false }}
         />
 
@@ -94,6 +83,20 @@ export default function App() {
           name="price"
           component={Price}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="pickUp"
+          component={PickUpLocation}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="drop"
+          component={DropLocation}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
