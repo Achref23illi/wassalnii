@@ -1,5 +1,5 @@
-import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import splash from "./screens/splash";
@@ -16,6 +16,8 @@ import ReturnDate from "./screens/publish/ReturnDate";
 import Price from "./screens/publish/Price";
 import PickUpLocation from "./screens/findATrip/PickUpLocation";
 import DropLocation from "./screens/findATrip/DropLocation";
+import FromScreen from "./screens/home/FromScreen";
+import Login from "./screens/Login";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +33,11 @@ export default function App() {
         <Stack.Screen
           name="welcome"
           component={Welcome}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -94,6 +101,13 @@ export default function App() {
         <Stack.Screen
           name="drop"
           component={DropLocation}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="fromScreen"
+          component={FromScreen}
           options={{
             headerShown: false,
           }}

@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TextInput,
 } from "react-native";
-import FontAwesome6 from "react-native-vector-icons/FontAwesome5";
+import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
@@ -40,7 +41,7 @@ const Destination = () => {
 
       {/* Icon indicating direction from the fixed address to the search bar */}
       <View style={styles.directionIconContainer}>
-        <FontAwesome6 name="arrow-down" size={24} color="#2E86AB" />
+        <FontAwesome name="angle-double-down" size={24} color="#2E86AB" />
       </View>
 
       <GooglePlacesAutocomplete
@@ -71,9 +72,11 @@ const Destination = () => {
 
 const styles = StyleSheet.create({
   bleu: {
+    position: "absolute",
     backgroundColor: "#2E86AB",
-    height: 150,
+    height: 10,
     width: "100%",
+    height: 120,
     alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "row",
@@ -81,7 +84,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -93,29 +95,33 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     backgroundColor: "#f0f0f0",
-    padding: 10,
+    height: 60,
+    padding: 15,
     marginHorizontal: 20,
     borderRadius: 10,
     marginTop: 20,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#ddd",
+    fontFamily: "Bold",
   },
   headerText: {
     color: "#fff",
     fontSize: 20,
     fontFamily: "SemiBold",
-    marginLeft: 10,
+    marginLeft: 40,
   },
   fixedAddress: {
     backgroundColor: "#f0f0f0",
-    color: "#000",
+    color: "#ccc",
+    height: 60,
     padding: 10,
     marginHorizontal: 20,
     borderRadius: 10,
-    marginTop: 20,
-    borderWidth: 1,
+    marginTop: 50,
+    borderWidth: 2,
     borderColor: "#ddd",
     fontSize: 16,
+    fontFamily: "Bold",
   },
   directionIconContainer: {
     alignItems: "center", // Centers the icon horizontally

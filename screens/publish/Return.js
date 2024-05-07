@@ -3,6 +3,7 @@ import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 
 const Return = () => {
   const navigation = useNavigation();
@@ -19,6 +20,11 @@ const Return = () => {
       date,
     });
   };
+  const [fontsLoaded] = useFonts({
+    Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
+    Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
+    SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
+  });
 
   const handleNoButton = () => {
     navigation.navigate("price", {
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
   },
   bleu: {
     backgroundColor: "#2E86AB",
-    height: 100,
+    height: 120,
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
   },
   returnText: {
     fontSize: 40,
-    fontFamily: "SemiBold",
+    fontFamily: "Bold",
   },
   returnButton: {
     flexDirection: "row",

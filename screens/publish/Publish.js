@@ -16,9 +16,9 @@ import { useNavigation } from "@react-navigation/native";
 export default function Publish() {
   const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
-    Bold: require("../assets/fonts/Montserrat-Bold.ttf"),
-    Regular: require("../assets/fonts/Montserrat-Regular.ttf"),
-    SemiBold: require("../assets/fonts/Montserrat-SemiBold.ttf"),
+    Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
+    Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
+    SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
   });
   const [location, setLocation] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -76,7 +76,10 @@ export default function Publish() {
           components: "country:DZ", // Restrict suggestions to Algeria
         }}
         styles={{
-          textInput: styles.searchBar,
+          textInput: {
+            ...styles.searchBar,
+            fontFamily: "Bold", // Replace with your font family
+          },
         }}
         renderHeaderComponent={() => (
           <TouchableOpacity
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     backgroundColor: "#2E86AB",
     width: "100%",
-    height: "20%", // adjust this as needed
+    height: 120,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
@@ -107,11 +110,12 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     backgroundColor: "#f0f0f0",
+    height: 60,
     padding: 10,
     marginHorizontal: 20,
     borderRadius: 10,
-    marginTop: 100,
-    borderWidth: 1,
+    marginTop: 140,
+    borderWidth: 2,
     borderColor: "#ddd",
   },
   itemContainer: {
@@ -124,12 +128,13 @@ const styles = StyleSheet.create({
   },
   itemText: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: "SemiBold",
   },
   headerText: {
     color: "#fff",
+    textAlign: "center",
     fontSize: 20,
-    marginLeft: 25,
     fontFamily: "SemiBold",
     marginTop: 70,
   },

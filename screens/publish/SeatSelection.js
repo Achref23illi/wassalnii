@@ -7,8 +7,12 @@ import {
   TextInput,
 } from "react-native";
 import { Octicons } from "@expo/vector-icons";
-import FontAwesome6 from "react-native-vector-icons/FontAwesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 
 const SeatSelection = () => {
   const navigation = useNavigation();
@@ -22,6 +26,11 @@ const SeatSelection = () => {
   const decreaseSeats = () => {
     setSeats((prev) => (prev > 1 ? prev - 1 : prev)); // Minimum 1 seat
   };
+  const [fontsLoaded] = useFonts({
+    Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
+    Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
+    SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
+  });
 
   return (
     <View style={styles.container}>
@@ -43,7 +52,7 @@ const SeatSelection = () => {
         />
 
         <View style={styles.directionIconContainer}>
-          <FontAwesome6 name="arrow-down" size={24} color="#2E86AB" />
+          <FontAwesome name="angle-double-down" size={24} color="#2E86AB" />
         </View>
 
         <TextInput
@@ -54,11 +63,14 @@ const SeatSelection = () => {
 
         <View style={styles.seatSelector}>
           <TouchableOpacity onPress={decreaseSeats}>
-            <Octicons name="diff-removed" size={60} color="#2E86AB" />
+            <AntDesign name="minuscircle" size={36} color="black" />
           </TouchableOpacity>
-          <Text style={styles.seatText}>{seats}</Text>
+          <View style={styles.number}>
+            <MaterialCommunityIcons name="seatbelt" size={65} color="black" />
+            <Text style={styles.seatText}>{seats}</Text>
+          </View>
           <TouchableOpacity onPress={increaseSeats}>
-            <Octicons name="diff-added" size={60} color="#2E86AB" />
+            <AntDesign name="pluscircle" size={36} color="black" />
           </TouchableOpacity>
         </View>
 
@@ -86,7 +98,7 @@ const styles = StyleSheet.create({
   },
   bleu: {
     backgroundColor: "#2E86AB",
-    height: 100,
+    height: 120,
     alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "row",
@@ -104,14 +116,20 @@ const styles = StyleSheet.create({
     paddingTop: 150, // Make sure there is space for the header
     paddingHorizontal: 20,
   },
+  number: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   fixedInput: {
     backgroundColor: "#f0f0f0",
+    height: 60,
     padding: 10,
     marginTop: 10,
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#ccc",
     fontSize: 16,
+    fontFamily: "Bold",
   },
   headerText: {
     color: "#fff",
@@ -125,11 +143,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
   },
+  number: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 40,
+  },
   seatText: {
-    fontSize: 200,
-    marginHorizontal: 20,
+    fontSize: 70,
     color: "#121212",
-    paddingHorizontal: 25,
+    fontFamily: "Regular",
   },
   nextButton: {
     backgroundColor: "#2E86AB",
@@ -144,6 +167,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 22,
     textAlign: "center",
+    fontFamily: "SemiBold",
   },
   directionIconContainer: {
     alignItems: "center", // Centers the icon horizontally

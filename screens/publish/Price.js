@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Octicons from "react-native-vector-icons/Octicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 
 const Price = () => {
   const navigation = useNavigation();
@@ -17,6 +18,11 @@ const Price = () => {
       setPrice(price - 50);
     }
   };
+  const [fontsLoaded] = useFonts({
+    Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
+    Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
+    SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
+  });
 
   return (
     <View style={styles.container}>
@@ -37,11 +43,11 @@ const Price = () => {
 
       <View style={styles.priceContainer}>
         <TouchableOpacity onPress={decreasePrice}>
-          <Octicons name="diff-removed" size={40} color="#2E86AB" />
+          <AntDesign name="minuscircle" size={30} color="black" />
         </TouchableOpacity>
         <Text style={styles.priceText}>{price} DA</Text>
         <TouchableOpacity onPress={increasePrice}>
-          <Octicons name="diff-added" size={40} color="#2E86AB" />
+          <AntDesign name="pluscircle" size={30} color="black" />
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.publishButton}>
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
   },
   bleu: {
     backgroundColor: "#2E86AB",
-    height: 100,
+    height: 120,
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -86,8 +92,9 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 60,
-    color: "#2E86AB",
+    color: "#000",
     paddingHorizontal: 20,
+    fontFamily: "SemiBold",
   },
   publishButton: {
     backgroundColor: "#2E86AB",
@@ -100,6 +107,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
     textAlign: "center",
+    fontFamily: "SemiBold",
   },
 });
 

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { CalendarList } from "react-native-calendars";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 
 const ReturnDate = () => {
   const navigation = useNavigation();
@@ -16,6 +17,11 @@ const ReturnDate = () => {
   } = route.params; // Get the start date and other parameters from navigation parameters
   const [selectedDate, setSelectedDate] = useState(startDate);
   const [markedDates, setMarkedDates] = useState({});
+  const [fontsLoaded] = useFonts({
+    Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
+    Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
+    SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
+  });
 
   useEffect(() => {
     let dates = getDatesBetween(new Date(startDate), new Date(selectedDate));
@@ -95,7 +101,7 @@ const ReturnDate = () => {
 
       <CalendarList
         pastScrollRange={0}
-        futureScrollRange={4} // Limit future scroll range to 3 months
+        futureScrollRange={1} // Limit future scroll range to 3 months
         scrollEnabled={true}
         showScrollIndicator={true}
         onDayPress={onDayPress}
@@ -109,6 +115,8 @@ const ReturnDate = () => {
           todayTextColor: "#2E86AB",
           todayBackgroundColor: "#fff",
           arrowColor: "gray",
+          textDayFontFamily: "SemiBold",
+          textMonthFontFamily: "Bold",
         }}
       />
 

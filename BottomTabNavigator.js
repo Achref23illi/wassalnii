@@ -1,9 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import HomePage from "./screens/home";
+import HomePage from "./screens/home/home";
 import InboxPage from "./screens/InboxPage";
-import Publish from "./screens/Publish";
+import Publish from "./screens/publish/Publish";
 import { HeaderTitle } from "@react-navigation/elements";
 
 const Tab = createBottomTabNavigator();
@@ -30,6 +30,12 @@ export default function BottomTabNavigator() {
         },
         tabBarActiveTintColor: "#2E86AB",
         tabBarInactiveTintColor: "#000",
+        tabBarStyle: {
+          height: 70, // Adjust the height here
+        },
+        tabBarLabelStyle: {
+          marginBottom: 20, // Reduce space between icon and label
+        },
       })}
     >
       <Tab.Screen name="Home" component={HomePage} />
