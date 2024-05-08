@@ -18,6 +18,7 @@ import PickUpLocation from "./screens/findATrip/PickUpLocation";
 import DropLocation from "./screens/findATrip/DropLocation";
 import FromScreen from "./screens/home/FromScreen";
 import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,11 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
           options={{ headerShown: false }}
         />
         <Stack.Screen
