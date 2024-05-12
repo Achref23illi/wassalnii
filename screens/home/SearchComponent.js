@@ -16,7 +16,7 @@ const SearchComponent = ({ onFocusChange, onAddressChange }) => {
         fetchDetails={true}
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
-          console.log(data, details);
+          console.log(details.formatted_address); // Log only the simplified address
           onAddressChange(details.formatted_address); // Call onAddressChange with the selected address
         }}
         query={{

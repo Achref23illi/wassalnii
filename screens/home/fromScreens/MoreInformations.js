@@ -5,28 +5,23 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { useFonts } from "expo-font";
 
-const TimePickerScreen = () => {
+const MoreInformations = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [time, setTime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [fontsLoaded] = useFonts({
-    Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
-    Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
-    SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
-  });
+  const { fromAddress, toAddress, date, seats } = route.params;
 
-  const { pickupAddress, destinationAddress, seats, date } = route.params;
+  const [fontsLoaded] = useFonts({
+    Bold: require("../../../assets/fonts/Montserrat-Bold.ttf"),
+    Regular: require("../../../assets/fonts/Montserrat-Regular.ttf"),
+    SemiBold: require("../../../assets/fonts/Montserrat-SemiBold.ttf"),
+  });
 
   const onChange = (event, selectedTime) => {
     setShowPicker(false);
     if (selectedTime) {
-      const formattedTime = `${String(selectedTime.getHours()).padStart(
-        2,
-        "0"
-      )}:${String(selectedTime.getMinutes()).padStart(2, "0")}`;
       setTime(selectedTime);
-      console.log("Selected Time:", formattedTime);
     }
   };
 
@@ -35,34 +30,27 @@ const TimePickerScreen = () => {
     time.getMinutes()
   ).padStart(2, "0")}`;
 
-  const handleNextPress = () => {
-    console.log("Navigating with Time:", formattedTime);
-    navigation.navigate("return", {
-      pickupTime: formattedTime,
-      pickupAddress,
-      destinationAddress,
-      seats,
-      date,
-    });
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.bleu}>
         <TouchableOpacity
-          style={{ marginLeft: 10, marginTop: 20 }}
+          style={{ marginLeft: 10 }}
           onPress={() => navigation.goBack()}
         >
-          <FontAwesome5 name="arrow-left" size={24} color="white" />
+          <FontAwesome5
+            name="arrow-left"
+            size={24}
+            color="white"
+            style={{ marginTop: 20 }}
+          />
         </TouchableOpacity>
         <Text style={styles.headerText}>When are you going?</Text>
       </View>
 
       <Image
         style={styles.imageMiddle}
-        source={require("../../assets/images/bridge.png")}
+        source={require("../../../assets/images/bridge.png")}
       />
-
       <TouchableOpacity
         style={styles.timeButton}
         onPress={() => setShowPicker(true)}
@@ -82,7 +70,18 @@ const TimePickerScreen = () => {
         />
       )}
 
-      <TouchableOpacity style={styles.nextButton} onPress={handleNextPress}>
+      <TouchableOpacity
+        style={styles.nextButton}
+        onPress={() =>
+          navigation.navigate("return", {
+            pickupTime: time.toISOString(),
+            fromAddress,
+            toAddress,
+            date,
+            seats,
+          })
+        }
+      >
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
     </View>
@@ -133,21 +132,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   nextButton: {
-    position: "absolute",
+    position: "absolute", // Position button in the bottom-right
     right: 20,
     bottom: 20,
-    backgroundColor: "#2E86AB",
     padding: 15,
     paddingHorizontal: 30,
-    borderRadius: 50,
+    borderRadius: 50, // Circular button
     alignItems: "center",
     justifyContent: "center",
   },
   nextButtonText: {
-    color: "#fff",
-    fontSize: 20,
+    color: "#2E86AB",
+    fontSize: 30,
     fontFamily: "SemiBold",
   },
 });
-
-export default TimePickerScreen;
+export default MoreInformations;

@@ -1,15 +1,9 @@
 import React, { useState, useRef } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { GOOGLE_MAPS_APIKEY } from "@env"; // Import the API key
+import { GOOGLE_MAPS_APIKEY } from "@env";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 
@@ -21,7 +15,7 @@ export default function Publish() {
     SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
   });
   const [location, setLocation] = useState(null);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [fromAddress, setFromAddress] = useState(null);
   const ref = useRef();
 
   const fetchLocation = async () => {
@@ -34,18 +28,22 @@ export default function Publish() {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
 
-    // Get the address from the location coordinates
     let geoAddress = await Location.reverseGeocodeAsync({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     });
 
-    // Set the address in the GooglePlacesAutocomplete input field
-    ref.current.setAddressText(geoAddress[0].street);
+    const address = geoAddress[0].street
+      ? `${geoAddress[0].street}, ${geoAddress[0].city}`
+      : geoAddress[0].city;
 
-    // Navigate to the next page
+    ref.current.setAddressText(address);
+    setFromAddress(address);
+
+    console.log("Current Location Address:", address);
+
     navigation.navigate("distination", {
-      address: geoAddress[0].street,
+      address,
     });
   };
 
@@ -55,30 +53,35 @@ export default function Publish() {
         <Text style={styles.headerText}>Where are you leaving from?</Text>
       </View>
 
+      <Image
+        style={styles.imageMiddle}
+        source={require("../../assets/images/bridge.png")}
+      />
+
       <GooglePlacesAutocomplete
         ref={ref}
         placeholder="Enter your pickup address"
         fetchDetails={true}
         onPress={(data, details = null) => {
-          const wilaya = details.address_components.find((component) =>
-            component.types.includes("administrative_area_level_1")
-          );
-          setSelectedAddress(details.formatted_address);
-          console.log(data, details);
+          const formattedAddress = details
+            ? details.formatted_address
+            : data.description;
+          setFromAddress(formattedAddress);
+          console.log("Selected Address:", formattedAddress);
           navigation.navigate("distination", {
-            address: details.formatted_address,
+            address: formattedAddress,
           });
         }}
         query={{
-          key: GOOGLE_MAPS_APIKEY, // Use the imported API key
+          key: GOOGLE_MAPS_APIKEY,
           language: "en",
-          types: "geocode", // See Google API for other types
-          components: "country:DZ", // Restrict suggestions to Algeria
+          types: "geocode",
+          components: "country:DZ",
         }}
         styles={{
           textInput: {
             ...styles.searchBar,
-            fontFamily: "Bold", // Replace with your font family
+            fontFamily: "Bold",
           },
         }}
         renderHeaderComponent={() => (
@@ -96,17 +99,32 @@ export default function Publish() {
 }
 
 const styles = StyleSheet.create({
-  bleu: {
-    position: "absolute",
-    backgroundColor: "#2E86AB",
-    width: "100%",
-    height: 120,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  bleu: {
+    backgroundColor: "#2E86AB",
+    height: 120,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    padding: 10,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerText: {
+    color: "#fff",
+    fontSize: 20,
+    marginTop: 20,
+    fontFamily: "SemiBold",
+    marginLeft: 20,
+  },
+  imageMiddle: {
+    width: "100%",
+    height: 100,
+    resizeMode: "contain",
   },
   searchBar: {
     backgroundColor: "#f0f0f0",
@@ -114,7 +132,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 20,
     borderRadius: 10,
-    marginTop: 140,
+    marginTop: 40,
     borderWidth: 2,
     borderColor: "#ddd",
   },
@@ -130,12 +148,5 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 17,
     fontFamily: "SemiBold",
-  },
-  headerText: {
-    color: "#fff",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "SemiBold",
-    marginTop: 70,
   },
 });

@@ -3,8 +3,6 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import splash from "./screens/splash";
-import phone from "./screens/phone";
-import otp from "./screens/otp";
 import Welcome from "./screens/welcome";
 import BottomTabNavigator from "./BottomTabNavigator";
 import Distination from "./screens/publish/distination";
@@ -17,8 +15,11 @@ import Price from "./screens/publish/Price";
 import PickUpLocation from "./screens/findATrip/PickUpLocation";
 import DropLocation from "./screens/findATrip/DropLocation";
 import FromScreen from "./screens/home/FromScreen";
-import Login from "./screens/Login";
-import SignUp from "./screens/SignUp";
+import Information from "./screens/home/fromScreens/informations";
+import NumberOfFriends from "./screens/home/fromScreens/numberOfFriends";
+import MoreInformations from "./screens/home/fromScreens/MoreInformations";
+import IDInstruction from "./screens/settings/IDInstruction.js";
+import MessengerScreen from "./screens/chat/MessengerScreen.js";
 
 const Stack = createStackNavigator();
 
@@ -34,26 +35,6 @@ export default function App() {
         <Stack.Screen
           name="welcome"
           component={Welcome}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="phone"
-          component={phone}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Otp"
-          component={otp}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -117,6 +98,31 @@ export default function App() {
           options={{
             headerShown: false,
           }}
+        />
+        <Stack.Screen
+          name="Information"
+          component={Information}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Friends"
+          component={NumberOfFriends}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MoreInformations"
+          component={MoreInformations}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="IDInstruction"
+          component={IDInstruction}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MessengerScreen"
+          component={MessengerScreen}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

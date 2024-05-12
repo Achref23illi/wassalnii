@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 const Home = () => {
   const [searchFocused, setSearchFocused] = useState(false);
   const [address, setAddress] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const marginTop = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -35,12 +35,6 @@ const Home = () => {
 
   const handleAddressChange = (newAddress) => {
     setAddress(newAddress);
-    if (selectedDate) {
-      navigation.navigate("fromScreen", {
-        address: newAddress,
-        date: selectedDate,
-      });
-    }
   };
 
   return (
@@ -72,13 +66,12 @@ const Home = () => {
               <SearchButton
                 style={styles.searchButton}
                 onPress={() => {
-                  // console.log("Address:", address); // Debugging the address
                   console.log("Selected Date:", selectedDate); // Debugging the date
 
-                  if (address) {
+                  if (address && selectedDate) {
                     navigation.navigate("fromScreen", {
                       address: address,
-                      date: selectedDate,
+                      date: selectedDate.toISOString(), // Convert the Date object to a string
                     });
                   } else {
                     Alert.alert(

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
@@ -7,6 +7,14 @@ import { useFonts } from "expo-font";
 
 const Price = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {
+    date: startDate,
+    pickupTime,
+    pickupAddress,
+    destinationAddress,
+    seats,
+  } = route.params;
   const [price, setPrice] = useState(150);
 
   const increasePrice = () => {
@@ -18,11 +26,28 @@ const Price = () => {
       setPrice(price - 50);
     }
   };
+
   const [fontsLoaded] = useFonts({
     Bold: require("../../assets/fonts/Montserrat-Bold.ttf"),
     Regular: require("../../assets/fonts/Montserrat-Regular.ttf"),
     SemiBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
   });
+
+  const handlePublish = () => {
+    navigation.navigate("Trips", {
+      completedTrips: [
+        {
+          date: startDate,
+          startTime: pickupTime,
+          startLocation: pickupAddress,
+          endTime: destinationAddress.time,
+          endLocation: destinationAddress,
+          price,
+          seats,
+        },
+      ],
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -41,6 +66,13 @@ const Price = () => {
         <Text style={styles.headerText}>Set your price per seat</Text>
       </View>
 
+      <Image
+        style={styles.imageMiddle}
+        source={require("../../assets/images/bridge.png")}
+      />
+      <Text style={styles.test}>
+        Set your price per seat, ensuring it falls within the estimated range.
+      </Text>
       <View style={styles.priceContainer}>
         <TouchableOpacity onPress={decreasePrice}>
           <AntDesign name="minuscircle" size={30} color="black" />
@@ -50,7 +82,7 @@ const Price = () => {
           <AntDesign name="pluscircle" size={30} color="black" />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.publishButton}>
+      <TouchableOpacity style={styles.publishButton} onPress={handlePublish}>
         <Text style={styles.publishButtonText}>Publish Your Ride</Text>
       </TouchableOpacity>
     </View>
@@ -61,9 +93,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "space-between", // Add this line
-    paddingBottom: 20,
   },
   bleu: {
     backgroundColor: "#2E86AB",
@@ -83,12 +112,19 @@ const styles = StyleSheet.create({
     fontFamily: "SemiBold",
     marginLeft: 20,
   },
+  imageMiddle: {
+    width: "100%",
+    height: 100,
+    resizeMode: "contain",
+  },
   priceContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     width: "80%",
     marginBottom: 20,
+    marginTop: 40,
   },
   priceText: {
     fontSize: 60,
@@ -102,12 +138,20 @@ const styles = StyleSheet.create({
     width: "80%",
     borderRadius: 10,
     alignSelf: "center",
+    position: "absolute",
+    bottom: 20,
   },
   publishButtonText: {
     color: "#fff",
     fontSize: 20,
     textAlign: "center",
     fontFamily: "SemiBold",
+  },
+  test: {
+    textAlign: "center",
+    fontSize: 20,
+    fontFamily: "SemiBold",
+    margin: 20,
   },
 });
 

@@ -40,7 +40,7 @@ const WelcomeScreen = () => {
   };
 
   const continueToPhone = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Main");
   };
 
   return (

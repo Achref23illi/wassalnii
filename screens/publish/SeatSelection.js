@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Image,
 } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -36,13 +37,18 @@ const SeatSelection = () => {
     <View style={styles.container}>
       <View style={styles.bleu}>
         <TouchableOpacity
-          style={{ marginLeft: 10 }}
+          style={{ marginLeft: 10, marginTop: 20 }}
           onPress={() => navigation.goBack()}
         >
           <FontAwesome6 name="arrow-left" size={24} color="white" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Select Number of Seats</Text>
       </View>
+
+      <Image
+        style={styles.imageMiddle}
+        source={require("../../assets/images/bridge.png")}
+      />
 
       <View style={styles.contentContainer}>
         <TextInput
@@ -99,21 +105,28 @@ const styles = StyleSheet.create({
   bleu: {
     backgroundColor: "#2E86AB",
     height: 120,
+    width: "100%",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    flexDirection: "row",
     padding: 10,
-    paddingTop: 40,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000, // Make sure the header is above other content
+  },
+  headerText: {
+    color: "#fff",
+    fontSize: 20,
+    marginTop: 20,
+    fontFamily: "SemiBold",
+    marginLeft: 20,
+  },
+  imageMiddle: {
+    width: "100%",
+    height: 100,
+    resizeMode: "contain",
   },
   contentContainer: {
-    paddingTop: 150, // Make sure there is space for the header
+    paddingTop: 20, // Make sure there is space for the header
     paddingHorizontal: 20,
   },
   number: {
@@ -130,12 +143,6 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     fontSize: 16,
     fontFamily: "Bold",
-  },
-  headerText: {
-    color: "#fff",
-    fontSize: 20,
-    fontFamily: "SemiBold",
-    marginLeft: 10,
   },
   seatSelector: {
     flexDirection: "row",

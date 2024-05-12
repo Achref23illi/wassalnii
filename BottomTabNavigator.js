@@ -2,9 +2,10 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomePage from "./screens/home/home";
-import InboxPage from "./screens/InboxPage";
+import InboxPage from "./screens/chat/InboxPage";
 import Publish from "./screens/publish/Publish";
-import { HeaderTitle } from "@react-navigation/elements";
+import Trips from "./screens/trips/trips";
+import Profile from "./screens/settings/profile";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +25,10 @@ export default function BottomTabNavigator() {
             iconName = focused
               ? "chatbubble-ellipses"
               : "chatbubble-ellipses-outline";
+          } else if (route.name === "Trips") {
+            iconName = focused ? "albums" : "albums-outline";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "person" : "person-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -40,7 +45,9 @@ export default function BottomTabNavigator() {
     >
       <Tab.Screen name="Home" component={HomePage} />
       <Tab.Screen name="Publish" component={Publish} />
+      <Tab.Screen name="Trips" component={Trips} />
       <Tab.Screen name="Inbox" component={InboxPage} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
