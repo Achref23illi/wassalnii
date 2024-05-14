@@ -7,6 +7,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
+import test from "../api/text";
 
 const { width } = Dimensions.get("window"); // Get the screen width
 
@@ -34,6 +35,10 @@ const Splash = ({ navigation }) => {
       navigation.replace("welcome"); // Navigate to your main app screen here
     });
   }, [carAnim, logoAnim, navigation]);
+
+  useEffect(() => {
+    test();
+  }, []);
 
   return (
     <View style={styles.container}>
